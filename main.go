@@ -8,19 +8,13 @@ import (
 )
 
 func GenerateRandomIPAddr() (net.IP, error) {
-	a, err := rand.Int(rand.Reader, big.NewInt(255))
-	b, err := rand.Int(rand.Reader, big.NewInt(255))
-	c, err := rand.Int(rand.Reader, big.NewInt(255))
-	d, err := rand.Int(rand.Reader, big.NewInt(255))
+	ip := make([]byte, 4)
+	_, err := rand.Read(ip)
 	if err != nil {
+		log.Printf("ERROR: %v", err)
 		return nil, err
 	}
-	ab := a.Bytes()
-	bb := b.Bytes()
-	cb := c.Bytes()
-	db := d.Bytes()
-	log.Printf("DEBUG: %v, %v, %v, %v", ab, bb, cb, db)
-	return net.IPv4(ab[0], bb[0], cb[0], db[0]), nil
+	return net.IPv4(ip[0], ip[2], ip[3], ip[1]), nil
 }
 
 func GenerateRandomPort() (int, error) {
@@ -33,7 +27,10 @@ func GenerateRandomPort() (int, error) {
 }
 
 func main() {
-	for {
+	var i int
+	for i <= 1024 {
+		i++
+		//for {
 		ip, err := GenerateRandomIPAddr()
 		if err != nil {
 			break
